@@ -1,0 +1,157 @@
+# YML test files are auto-generated from SQL files and should not be edited by
+# hand. To help enforce this, the "hash" field in the file must match a hash
+# computed by SQLFluff when running the tests. Please run
+# `python test/generate_parse_fixture_yml.py`  to generate them after adding or
+# altering SQL files.
+_hash: 5a4c55f9a74672530c8ea56523217933f80a847ec6ef468ba56e840a7a430639
+file:
+  batch:
+  - statement:
+      create_external_model_statement:
+      - keyword: CREATE
+      - keyword: EXTERNAL
+      - keyword: MODEL
+      - object_reference:
+          naked_identifier: ada_embeddings
+      - keyword: WITH
+      - bracketed:
+        - start_bracket: (
+        - keyword: LOCATION
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "'https://contoso.openai.azure.com/openai/deployments/ada/embeddings?api-version=2024-02-01'"
+        - comma: ','
+        - keyword: API_FORMAT
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "'Azure OpenAI'"
+        - comma: ','
+        - keyword: MODEL_TYPE
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - keyword: EMBEDDINGS
+        - comma: ','
+        - keyword: MODEL
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "'text-embedding-ada-002'"
+        - comma: ','
+        - keyword: CREDENTIAL
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - object_reference:
+            quoted_identifier: '[https://contoso.openai.azure.com/]'
+        - end_bracket: )
+  - statement_terminator: ;
+  - statement:
+      create_external_model_statement:
+      - keyword: CREATE
+      - keyword: EXTERNAL
+      - keyword: MODEL
+      - object_reference:
+          naked_identifier: openai_small
+      - keyword: AUTHORIZATION
+      - role_reference:
+          naked_identifier: app_owner
+      - keyword: WITH
+      - bracketed:
+        - start_bracket: (
+        - keyword: LOCATION
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "'https://api.openai.com/v1/embeddings'"
+        - comma: ','
+        - keyword: API_FORMAT
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "'OpenAI'"
+        - comma: ','
+        - keyword: MODEL_TYPE
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - keyword: EMBEDDINGS
+        - comma: ','
+        - keyword: MODEL
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "'text-embedding-3-small'"
+        - comma: ','
+        - keyword: CREDENTIAL
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - object_reference:
+            quoted_identifier: '[https://api.openai.com]'
+        - comma: ','
+        - keyword: PARAMETERS
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "'{\"dimensions\": 512}'"
+        - end_bracket: )
+  - statement_terminator: ;
+  - statement:
+      create_external_model_statement:
+      - keyword: CREATE
+      - keyword: EXTERNAL
+      - keyword: MODEL
+      - object_reference:
+          naked_identifier: local_ollama
+      - keyword: WITH
+      - bracketed:
+        - start_bracket: (
+        - keyword: MODEL_TYPE
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - keyword: EMBEDDINGS
+        - comma: ','
+        - keyword: MODEL
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "'all-minilm'"
+        - comma: ','
+        - keyword: API_FORMAT
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "'Ollama'"
+        - comma: ','
+        - keyword: LOCATION
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "'https://localhost:11435/api/embed'"
+        - end_bracket: )
+  - statement_terminator: ;
+  - statement:
+      create_external_model_statement:
+      - keyword: CREATE
+      - keyword: EXTERNAL
+      - keyword: MODEL
+      - object_reference:
+          quoted_identifier: '[local onnx]'
+      - keyword: WITH
+      - bracketed:
+        - start_bracket: (
+        - keyword: LOCATION
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "N'C:\\models\\all-MiniLM-L6-v2'"
+        - comma: ','
+        - keyword: API_FORMAT
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "'ONNX Runtime'"
+        - comma: ','
+        - keyword: MODEL_TYPE
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - keyword: EMBEDDINGS
+        - comma: ','
+        - keyword: MODEL
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "'allMiniLM'"
+        - comma: ','
+        - keyword: LOCAL_RUNTIME_PATH
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "'C:\\onnx_runtime\\'"
+        - end_bracket: )
+  - statement_terminator: ;

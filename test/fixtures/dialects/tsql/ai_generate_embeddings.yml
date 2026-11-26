@@ -1,0 +1,183 @@
+# YML test files are auto-generated from SQL files and should not be edited by
+# hand. To help enforce this, the "hash" field in the file must match a hash
+# computed by SQLFluff when running the tests. Please run
+# `python test/generate_parse_fixture_yml.py`  to generate them after adding or
+# altering SQL files.
+_hash: 248603d7876bec323fd8db410b839feb019e2b22fd3ffe29a32e49ec2c277532
+file:
+  batch:
+  - statement:
+      select_statement:
+        select_clause:
+          keyword: SELECT
+          select_clause_element:
+            function:
+              function_name:
+                keyword: AI_GENERATE_EMBEDDINGS
+              function_contents:
+                bracketed:
+                - start_bracket: (
+                - expression:
+                    quoted_literal: "N'Hello world'"
+                - keyword: USE
+                - keyword: MODEL
+                - naked_identifier: ada_embeddings
+                - end_bracket: )
+  - statement_terminator: ;
+  - statement:
+      select_statement:
+        select_clause:
+        - keyword: SELECT
+        - select_clause_element:
+            column_reference:
+            - naked_identifier: d
+            - dot: .
+            - naked_identifier: id
+        - comma: ','
+        - select_clause_element:
+            function:
+              function_name:
+                keyword: AI_GENERATE_EMBEDDINGS
+              function_contents:
+                bracketed:
+                - start_bracket: (
+                - expression:
+                    column_reference:
+                    - naked_identifier: d
+                    - dot: .
+                    - naked_identifier: body
+                - keyword: USE
+                - keyword: MODEL
+                - naked_identifier: ada_embeddings
+                - end_bracket: )
+            alias_expression:
+              alias_operator:
+                keyword: AS
+              naked_identifier: embedding
+        from_clause:
+          keyword: FROM
+          from_expression:
+            from_expression_element:
+              table_expression:
+                table_reference:
+                - naked_identifier: dbo
+                - dot: .
+                - naked_identifier: documents
+              alias_expression:
+                alias_operator:
+                  keyword: AS
+                naked_identifier: d
+  - statement_terminator: ;
+  - statement:
+      declare_segment:
+        keyword: DECLARE
+        parameter: '@options'
+        data_type:
+          keyword: JSON
+        comparison_operator:
+          raw_comparison_operator: '='
+        expression:
+          quoted_literal: "N'{\"dimensions\": 768}'"
+  - statement_terminator: ;
+  - statement:
+      select_statement:
+        select_clause:
+          keyword: SELECT
+          select_clause_element:
+            function:
+              function_name:
+                keyword: AI_GENERATE_EMBEDDINGS
+              function_contents:
+                bracketed:
+                - start_bracket: (
+                - expression:
+                    column_reference:
+                      naked_identifier: title
+                - keyword: USE
+                - keyword: MODEL
+                - quoted_identifier: '[ada_embeddings]'
+                - keyword: PARAMETERS
+                - expression:
+                    parameter: '@options'
+                - end_bracket: )
+        from_clause:
+          keyword: FROM
+          from_expression:
+            from_expression_element:
+              table_expression:
+                table_reference:
+                - naked_identifier: dbo
+                - dot: .
+                - naked_identifier: documents
+  - statement_terminator: ;
+  - statement:
+      declare_segment:
+        keyword: DECLARE
+        parameter: '@v'
+        data_type:
+          keyword: VECTOR
+          bracketed_arguments:
+            bracketed:
+              start_bracket: (
+              expression:
+                integer_literal: '1536'
+              end_bracket: )
+        comparison_operator:
+          raw_comparison_operator: '='
+        expression:
+          function:
+            function_name:
+              keyword: AI_GENERATE_EMBEDDINGS
+            function_contents:
+              bracketed:
+              - start_bracket: (
+              - expression:
+                  quoted_literal: "N'search text'"
+              - keyword: USE
+              - keyword: MODEL
+              - naked_identifier: ada_embeddings
+              - end_bracket: )
+  - statement_terminator: ;
+  - statement:
+      update_statement:
+        keyword: UPDATE
+        table_reference:
+        - naked_identifier: dbo
+        - dot: .
+        - naked_identifier: documents
+        set_clause_list:
+          keyword: SET
+          set_clause:
+            column_reference:
+              naked_identifier: embedding
+            assignment_operator:
+              raw_comparison_operator: '='
+            expression:
+              function:
+                function_name:
+                  keyword: AI_GENERATE_EMBEDDINGS
+                function_contents:
+                  bracketed:
+                  - start_bracket: (
+                  - expression:
+                      column_reference:
+                        naked_identifier: body
+                  - keyword: USE
+                  - keyword: MODEL
+                  - naked_identifier: ada_embeddings
+                  - keyword: PARAMETERS
+                  - expression:
+                      function:
+                        function_name:
+                          keyword: TRY_CONVERT
+                        function_contents:
+                          bracketed:
+                            start_bracket: (
+                            data_type:
+                              keyword: JSON
+                            comma: ','
+                            expression:
+                              quoted_literal: "N'{\"dimensions\": 768}'"
+                            end_bracket: )
+                  - end_bracket: )
+  - statement_terminator: ;

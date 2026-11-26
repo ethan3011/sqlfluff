@@ -426,6 +426,29 @@ tsql_dialect.add(
             optional=True,
         ),
     ),
+    # Options of CREATE EXTERNAL MODEL and ALTER EXTERNAL MODEL
+    # https://learn.microsoft.com/en-us/sql/t-sql/statements/create-external-model-transact-sql
+    ExternalModelOptionsGrammar=Bracketed(
+        Delimited(
+            Sequence(
+                OneOf(
+                    "LOCATION",
+                    "API_FORMAT",
+                    "MODEL",
+                    "PARAMETERS",
+                    "LOCAL_RUNTIME_PATH",
+                ),
+                Ref("EqualsSegment"),
+                Ref("QuotedLiteralSegmentOptWithN"),
+            ),
+            Sequence("MODEL_TYPE", Ref("EqualsSegment"), "EMBEDDINGS"),
+            Sequence(
+                "CREDENTIAL",
+                Ref("EqualsSegment"),
+                Ref("ObjectReferenceSegment"),
+            ),
+        ),
+    ),
     AzureBlobStoragePath=RegexParser(
         r"'https://[a-z0-9][a-z0-9-]{1,61}[a-z0-9]\.blob\.core\.windows\.net/[a-z0-9]"
         r"[a-z0-9\.-]{1,61}[a-z0-9](?:/.+)?'",
@@ -998,6 +1021,9 @@ class StatementSegment(ansi.StatementSegment):
             Ref("CreateExternalTableStatementSegment"),
             Ref("CreateExternalTableAsSelectStatementSegment"),
             Ref("DropExternalTableStatementSegment"),
+            Ref("CreateExternalModelStatementSegment"),
+            Ref("AlterExternalModelStatementSegment"),
+            Ref("DropExternalModelStatementSegment"),
             Ref("CopyIntoTableStatementSegment"),
             Ref("CreateFullTextIndexStatementSegment"),
             Ref("AlterFullTextIndexStatementSegment"),
@@ -5119,6 +5145,19 @@ class JsonAggFunctionNameSegment(BaseSegment):
     match_grammar = OneOf("JSON_ARRAYAGG", "JSON_OBJECTAGG")
 
 
+class AiGenerateEmbeddingsFunctionNameSegment(BaseSegment):
+    """AI_GENERATE_EMBEDDINGS function name segment.
+
+    https://learn.microsoft.com/en-us/sql/t-sql/functions/ai-generate-embeddings-transact-sql
+
+    Need to be able to specify this as type function_name
+    so that linting rules identify it properly
+    """
+
+    type = "function_name"
+    match_grammar = Sequence("AI_GENERATE_EMBEDDINGS")
+
+
 class RankFunctionNameSegment(BaseSegment):
     """Rank function name segment.
 
@@ -5298,6 +5337,29 @@ class ReplicateFunctionContentsSegment(BaseSegment):
             ),
             Ref("CommaSegment"),
             Ref("ExpressionSegment"),
+        ),
+    )
+
+
+class AiGenerateEmbeddingsFunctionContentsSegment(BaseSegment):
+    """AI_GENERATE_EMBEDDINGS function contents.
+
+    https://learn.microsoft.com/en-us/sql/t-sql/functions/ai-generate-embeddings-transact-sql
+    """
+
+    type = "function_contents"
+
+    match_grammar = Bracketed(
+        Ref("ExpressionSegment"),  # source
+        "USE",
+        "MODEL",
+        # The model name is a single identifier, kept out of object_reference
+        # so that references rules don't treat it as a column.
+        Ref("SingleIdentifierGrammar"),
+        Sequence(
+            "PARAMETERS",
+            Ref("ExpressionSegment"),
+            optional=True,
         ),
     )
 
@@ -5555,6 +5617,10 @@ class FunctionSegment(BaseSegment):
         Sequence(
             Ref("ReplicateFunctionNameSegment"),
             Ref("ReplicateFunctionContentsSegment"),
+        ),
+        Sequence(
+            Ref("AiGenerateEmbeddingsFunctionNameSegment"),
+            Ref("AiGenerateEmbeddingsFunctionContentsSegment"),
         ),
         Sequence(
             Ref("WithinGroupFunctionNameSegment"),
@@ -9556,6 +9622,60 @@ class DropExternalTableStatementSegment(BaseSegment):
         "EXTERNAL",
         "TABLE",
         Ref("TableReferenceSegment"),
+    )
+
+
+class CreateExternalModelStatementSegment(BaseSegment):
+    """A `CREATE EXTERNAL MODEL` statement.
+
+    https://learn.microsoft.com/en-us/sql/t-sql/statements/create-external-model-transact-sql
+    """
+
+    type = "create_external_model_statement"
+    match_grammar = Sequence(
+        "CREATE",
+        "EXTERNAL",
+        "MODEL",
+        Ref("ObjectReferenceSegment"),
+        Sequence(
+            "AUTHORIZATION",
+            Ref("RoleReferenceSegment"),
+            optional=True,
+        ),
+        "WITH",
+        Ref("ExternalModelOptionsGrammar"),
+    )
+
+
+class AlterExternalModelStatementSegment(BaseSegment):
+    """An `ALTER EXTERNAL MODEL` statement.
+
+    https://learn.microsoft.com/en-us/sql/t-sql/statements/alter-external-model-transact-sql
+    """
+
+    type = "alter_external_model_statement"
+    match_grammar = Sequence(
+        "ALTER",
+        "EXTERNAL",
+        "MODEL",
+        Ref("ObjectReferenceSegment"),
+        "SET",
+        Ref("ExternalModelOptionsGrammar"),
+    )
+
+
+class DropExternalModelStatementSegment(BaseSegment):
+    """A `DROP EXTERNAL MODEL` statement.
+
+    https://learn.microsoft.com/en-us/sql/t-sql/statements/drop-external-model-transact-sql
+    """
+
+    type = "drop_external_model_statement"
+    match_grammar = Sequence(
+        "DROP",
+        "EXTERNAL",
+        "MODEL",
+        Ref("ObjectReferenceSegment"),
     )
 
 

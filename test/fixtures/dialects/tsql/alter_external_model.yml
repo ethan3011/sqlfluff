@@ -1,0 +1,51 @@
+# YML test files are auto-generated from SQL files and should not be edited by
+# hand. To help enforce this, the "hash" field in the file must match a hash
+# computed by SQLFluff when running the tests. Please run
+# `python test/generate_parse_fixture_yml.py`  to generate them after adding or
+# altering SQL files.
+_hash: 05f5ef3927489620f6b33a1c6057ba7e4768a8616dd6e5169dc9a3415cd8d1b8
+file:
+  batch:
+  - statement:
+      alter_external_model_statement:
+      - keyword: ALTER
+      - keyword: EXTERNAL
+      - keyword: MODEL
+      - object_reference:
+          naked_identifier: ada_embeddings
+      - keyword: SET
+      - bracketed:
+          start_bracket: (
+          keyword: MODEL
+          comparison_operator:
+            raw_comparison_operator: '='
+          quoted_literal: "'text-embedding-3-large'"
+          end_bracket: )
+  - statement_terminator: ;
+  - statement:
+      alter_external_model_statement:
+      - keyword: ALTER
+      - keyword: EXTERNAL
+      - keyword: MODEL
+      - object_reference:
+          naked_identifier: ada_embeddings
+      - keyword: SET
+      - bracketed:
+        - start_bracket: (
+        - keyword: LOCATION
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "'https://contoso.openai.azure.com/openai/deployments/large/embeddings?api-version=2024-02-01'"
+        - comma: ','
+        - keyword: CREDENTIAL
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - object_reference:
+            quoted_identifier: '[https://contoso.openai.azure.com/]'
+        - comma: ','
+        - keyword: PARAMETERS
+        - comparison_operator:
+            raw_comparison_operator: '='
+        - quoted_literal: "'{\"dimensions\": 1024}'"
+        - end_bracket: )
+  - statement_terminator: ;
